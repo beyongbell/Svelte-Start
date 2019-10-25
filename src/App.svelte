@@ -122,6 +122,20 @@
 		return `${flavours.slice(0, -1).join(', ')} and ${flavours[flavours.length - 1]}`;
 	}
 
+	let questions = [
+		{ id: 1, text: `Where did you go to school?` },
+		{ id: 2, text: `What is your mother's name?` },
+		{ id: 3, text: `What is another personal fact that an attacker could easily find with Google?` }
+	];
+
+	let selected;
+
+	let answer = '';
+
+	function handleSubmit() {
+		alert(`answered question ${selected.id} (${selected.text}) with "${answer}"`);
+	}
+
 </script>
 
 <style>
@@ -129,6 +143,8 @@
 		color: purple;
 	}
 	div { width: 20%; height: 20%; }
+
+	input { display: block; width: 500px; max-width: 100%; }
 </style>
 
 <h1>Hello {name}!</h1>
@@ -278,7 +294,6 @@
 	<input type=radio bind:group={scoops} value={1}>
 	One scoop
 </label>
-
 <label>
 	<input type=radio bind:group={scoops} value={2}>
 	Two scoops
@@ -309,10 +324,25 @@
 	</p>
 {/if}
 
+<h2>Insecurity questions</h2>
 
+<form on:submit|preventDefault={handleSubmit}>
+	<select bind:value={selected} on:change="{() => answer = ''}">
+		{#each questions as question}
+			<option value={question}>
+				{question.text}
+			</option>
+		{/each}
+	</select>
 
+	<input bind:value={answer}>
 
+	<button disabled={!answer} type=submit>
+		Submit
+	</button>
+</form>
 
+<p>selected question {selected ? selected.id : '[waiting...]'}</p>
 
 
 
