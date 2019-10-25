@@ -2,8 +2,10 @@
 	import Nested from './Nested.svelte';
 	import Interact from './Interact.svelte';
 	import Info from './Info.svelte';
+	import Thing from './Thing.svelte';
 
 	export let name;
+
 	let world  = "Tinnakorn";
 	let src    = 'assets/image/svelte.png';
 	let string = `this string contains some <strong>HTML!!!</strong>`;
@@ -42,12 +44,59 @@
 		user.loggedIn = !user.loggedIn;
 	}
 
+	let x = 7;
+
+	let cats = [
+		{ id: 'J---aiyznGQ', name: 'Keyboard Cat' },
+		{ id: 'z_AbfPXTKms', name: 'Maru' },
+		{ id: 'OUtn3pvWmpg', name: 'Henri The Existential Cat' }
+	];
+
+	let things = [
+		{ id: 1, color: '#0d0887' },
+		{ id: 2, color: '#6a00a8' },
+		{ id: 3, color: '#b12a90' },
+		{ id: 4, color: '#e16462' },
+		{ id: 5, color: '#fca636' }
+	];
+
+	function handleClickThings() {
+		things = things.slice(1);
+	}
+
+	let promise = getRandomNumber();
+
+	async function getRandomNumber() {
+		const res  = await fetch(`http://numbersapi.com/random/math`);
+		const text = await res.text();
+		if (res.ok) {
+			return text;
+		} else {
+			throw new Error(text);
+		}
+	}
+
+	function handleClickRandomNumber() {
+		promise = getRandomNumber();
+	}
+
+	let m = { x: 0, y: 0 };
+
+	function handleMousemove(event) {
+		m.x = event.clientX;
+		m.y = event.clientY;
+	}
+
+	function handleClickOnce() {
+		alert('no more alerts')
+	}
 </script>
 
 <style>
 	h1 {
 		color: purple;
 	}
+	div { width: 50%; height: 50%; }
 </style>
 
 <h1>Hello {name}!</h1>
@@ -92,3 +141,89 @@
 		Log in
 	</button>
 {/if}
+
+{#if user.loggedIn}
+	<button on:click={toggle}>
+		Log out
+	</button>
+{:else}
+	<button on:click={toggle}>
+		Log in
+	</button>
+{/if}
+
+{#if x > 10}
+	<p>{x} is greater than 10</p>
+{:else if 5 > x}
+	<p>{x} is less than 5</p>
+{:else}
+	<p>{x} is between 5 and 10</p>
+{/if}
+
+<h1>The Famous Cats of YouTube</h1>
+<ul>
+	{#each cats as { id, name }, i}
+		<li><a target="_blank" href="https://www.youtube.com/watch?v={id}">
+			{i + 1}: {name}
+		</a></li>
+	{/each}
+</ul>
+
+<button on:click={handleClickThings}>
+	Remove first thing
+</button>
+
+{#each things as thing}
+	<Thing current={thing.color}/>
+{/each}
+
+
+<button on:click={handleClickRandomNumber}>
+	generate random number
+</button>
+
+{#await promise}
+	<p>...waiting</p>
+{:then number}
+	<p>The number is {number}</p>
+{:catch error}
+	<p style="color: red">{error.message}</p>
+{/await}
+
+<button on:click|once={handleClickOnce}>
+	Click me
+</button>
+
+<div on:mousemove={handleMousemove}>
+	The mouse position is {m.x} x {m.y}
+</div>
+
+<div on:mousemove="{e => m = { x: e.clientX, y: e.clientY }}">
+	The mouse position is {m.x} x {m.y}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br>
