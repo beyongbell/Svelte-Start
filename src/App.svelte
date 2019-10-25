@@ -1,5 +1,8 @@
 <script>
 	import Nested from './Nested.svelte';
+	import Interact from './Interact.svelte';
+	import Info from './Info.svelte';
+
 	export let name;
 	let world  = "Tinnakorn";
 	let src    = 'assets/image/svelte.png';
@@ -25,6 +28,19 @@
 	}
 
 	$: sum = numbers.reduce((t, n) => t + n, 0);
+
+	const pkg = {
+		name: 'svelte',
+		version: 3,
+		speed: 'blazing',
+		website: 'https://svelte.dev'
+	};
+
+	let user = { loggedIn: false };
+
+	function toggle() {
+		user.loggedIn = !user.loggedIn;
+	}
 
 </script>
 
@@ -59,3 +75,20 @@
 <button on:click={addNumber}>
 	Add a number
 </button>
+
+<Interact answer={42}/>
+<Interact/>
+
+<Info {...pkg}/>
+
+{#if user.loggedIn}
+	<button on:click={toggle}>
+		Log out
+	</button>
+{/if}
+
+{#if !user.loggedIn}
+	<button on:click={toggle}>
+		Log in
+	</button>
+{/if}
