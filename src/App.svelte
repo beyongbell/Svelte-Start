@@ -3,12 +3,16 @@
 	import Interact from './Interact.svelte';
 	import Info from './Info.svelte';
 	import Thing from './Thing.svelte';
+	import Inner from './Inner.svelte';
+	import Outer from './Outer.svelte';
+	import FancyButton from './FancyButton.svelte';
 
 	export let name;
 
 	let world  = "Tinnakorn";
 	let src    = 'assets/image/svelte.png';
 	let string = `this string contains some <strong>HTML!!!</strong>`;
+	let firstname = 'world';
 
 	let count  = 0;
 	$: doubled = count * 2;
@@ -90,13 +94,27 @@
 	function handleClickOnce() {
 		alert('no more alerts')
 	}
+
+	function handleMessage(event) {
+		alert(event.detail.text);
+	}
+
+	function handleClickButton() {
+		alert('clicked');
+	}
+
+	let a = 1;
+	let b = 2;
+
+	let yes = false;
+
 </script>
 
 <style>
 	h1 {
 		color: purple;
 	}
-	div { width: 50%; height: 50%; }
+	div { width: 20%; height: 20%; }
 </style>
 
 <h1>Hello {name}!</h1>
@@ -202,16 +220,43 @@
 	The mouse position is {m.x} x {m.y}
 </div>
 
+<Inner on:message={handleMessage}/>
 
+<Outer on:message={handleMessage}/>
 
+<FancyButton on:click={handleClickButton}/>
 
+<br>
+<input bind:value={firstname}>
 
+<h1>Hello {firstname}!</h1>
 
+<label>
+	<input type=number bind:value={a} min=0 max=10>
+	<input type=range bind:value={a} min=0 max=10>
+</label>
 
+<label>
+	<input type=number bind:value={b} min=0 max=10>
+	<input type=range bind:value={b} min=0 max=10>
+</label>
 
+<p>{a} + {b} = {a + b}</p>
 
+<label>
+	<input type=checkbox bind:checked={yes}>
+	Yes! Send me regular email spam
+</label>
 
+{#if yes}
+	<p>Thank you. We will bombard your inbox and sell your personal details.</p>
+{:else}
+	<p>You must opt in to continue. If you're not paying, you're the product.</p>
+{/if}
 
+<button disabled={!yes}>
+	Subscribe
+</button>
 
 
 
